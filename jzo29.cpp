@@ -94,9 +94,15 @@ int MoreThanHalfNum1(unsigned long *numbers, int length)
 	while (index != middle)
 	{
 		if (index < middle)
+		{
+			left = index + 1;  //必须的，否则left就一直未0
 			index = QuickSortPartition1(numbers, index + 1, right);
+		}
 		else if(index > middle)
-			index = QuickSortPartition1(numbers, left, index - 1);
+		{
+			right = index - 1; //和上面一样，也是必须的，否则就一直未n - 1
+			index = QuickSortPartition1(numbers, left, right);
+		}
 	}
 	unsigned long result = numbers[middle];
 
