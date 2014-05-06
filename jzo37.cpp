@@ -1,81 +1,105 @@
 #include <iostream>
 #include <cstdio>
-
+#include <cstring>
 
 using namespace std;
 
-#define MAX 10006
+#define MAX 1003
 
-int GetFirstK(int *arr, int k, int start, int end)
+struct ListNode
 {
-	if (start > end)
-		return -1;
-	int middle_index = (start + end) / 2;
-	int middle_data = arr[middle_index];
-	if (middle_data == k)
-	{
-		if ((middle_index > 0 && arr[middle_index - 1] != k) || middle_index == 0)
-			return middle_index;
-		else
-			end = middle_index - 1;
-	}
-	else if (middle_data > k)
-		end = middle_index - 1;
-	else if (middle_data < k)
-		start = middle_index + 1;
+	int value;
+	ListNode *next;
+};
 
-	return GetFirstK(arr, k, start, end);
+ListNode *CreateList(ListNode **root, int n)
+{
+	if (n <= 0)
+		return NULL;
+	*root = new ListNode;
+	ListNode *index;
+	int tmp;
+	cin >> tmp;
+	(*root)->value = tmp;
+	(*root)->next = NULL;
+	index = *root;
+	for (int i = 1; i < n; i++)
+	{
+		index->next = new ListNode;
+		index = index->next;
+		cin >> tmp;
+		index->value = tmp;
+		index->next = NULL;
+	}
+	return *root;
 }
 
-int GetLastK(int *arr, int k, int start, int end, int length)
+void DeletList(ListNode **root)
 {
-	if (start > end)
-		return -1;
-	int middle_index = (start + end) / 2;
-	int middle_data = arr[middle_index];
-	if (middle_data == k)
+	if (*root == NULL)
+		return;
+	ListNode *index = *root, *tmp;
+	while (index)
 	{
-		if ((middle_index < length - 1 && arr[middle_index + 1] != k) || middle_index == length - 1)
-			return middle_index;
-		else
-			start = middle_index + 1;
+		tmp = index->next;
+		delete index;
+		index = tmp;
 	}
-	else if (middle_data > k)
-		end = middle_index - 1;
-	else if (middle_data < k)
-		start = middle_index + 1;
 
-	return GetLastK(arr, k, start, end, length);
 }
 
-int GetNumberOfK(int *arr, int n, int k)
+int FindFirstCommonNode(ListNode *list1, ListNode *list2, int m, int n)
 {
-	if(arr == NULL || n <= 0)
-		return 0;
-	int first = GetFirstK(arr, k, 0, n - 1);
-	int last = GetLastK(arr, k, 0, n - 1, n);
-	if (first != -1 && last != -1)
-		return last - first + 1;
+	ListNode *index_long = NULL, *index_short = NULL;
+	int lon, sht;
+	if (m >= n)
+	{
+		lon = m;
+		sht = n;
+		index_long = list1;
+		index_short = list2;
+	}
 	else
-		return 0;
+	{
+		lon = n;
+		sht = m;
+		index_long = list2;
+		index_short = list1;
+	}
+	for (int i = 0; i < lon - sht; i++)
+		index_long = index_long->next;
+	while ((index_long != NULL) && (index_short != NULL))
+	{
+		if (index_long->value != index_short->value)
+		{
+			index_long = index_long->next;
+			index_short = index_short->next;
+		}
+		else
+			break;
+	}
+	if (index_long != NULL && index_short != NULL)
+		cout << index_long->value << endl;
+	else
+		cout << "My God" << endl;
+	return 0;
 }
 
 
 int main(void)
 {
-	int m, n, k, count = 0;
-	int arr[MAX];
-	while (cin >> n)
+
+	int m, n;
+	while (cin >> m >> n)
 	{
-		for (int i = 0;i < n; i++)
-			scanf("%d", &arr[i]);
-		cin >> m;
-		while (m --)
-		{
-			cin >> k;
-			count = GetNumberOfK(arr, n, k);
-			cout << count << endl;
-		}
+		ListNode *list1 = NULL;
+		ListNode *list2 = NULL;
+		CreateList(&list1, m);
+		CreateList(&list2, n);
+		FindFirstCommonNode(list1, list2, m, n);
+
+		DeletList(&list1);
+		DeletList(&list2);
 	}
 
 
