@@ -24,6 +24,7 @@ int find_num(int arr[MAX][MAX], int rows, int columns, int num)
 
 int main(void)
 {
+	printf("It is not edited by sifan\n");
 	int m, n, i, j, num, result;
 	int arr[MAX][MAX];
 
@@ -41,3 +42,4 @@ int main(void)
 	}
 	return 0;
 }
+//edit by sifan -- 2022.0814
